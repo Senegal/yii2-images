@@ -43,6 +43,9 @@ class Module extends \yii\base\Module
             $class = $this->className;
             $imageQuery = $class::find();
         }
+        if(empty($itemId)){
+            $itemId = null;
+        }
         $image = $imageQuery
             ->where([
                 'modelName' => $modelName,
