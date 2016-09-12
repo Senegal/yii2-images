@@ -188,10 +188,12 @@ class ImageBehave extends Behavior
         $imageQuery->where($finder);
         $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
 
+
         $imageRecords = $imageQuery->all();
         if(!$imageRecords){
             return [$this->getModule()->getPlaceHolder()];
         }
+        
         return $imageRecords;
     }
 
@@ -202,19 +204,23 @@ class ImageBehave extends Behavior
      */
     public function getImage()
     {
-        if ($this->getModule()->className === null) {
-            $imageQuery = Image::find();
-        } else {
-            $class = $this->getModule()->className;
-            $imageQuery = $class::find();
-        }
-        $finder = $this->getImagesFinder(['isMain' => 1]);
-        $imageQuery->where($finder);
-        $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
-
-        $img = $imageQuery->one();
-        if(!$img){
-            return $this->getModule()->getPlaceHolder();
+        $img = \Yii::$app->cache->get('mainImage' . this->owner->primaryKey);
+        if ($img === false) {
+            if ($this->getModule()->className === null) {
+                $imageQuery = Image::find();
+            } else {
+                $class = $this->getModule()->className;
+                $imageQuery = $class::find();
+            }
+            $finder = $this->getImagesFinder(['isMain' => 1]);
+            $imageQuery->where($finder);
+            $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
+    
+            $img = $imageQuery->one();
+            if(!$img){
+                return $this->getModule()->getPlaceHolder();
+            }
+            \Yii::$app->cache->set('mainImage' . this->owner->primaryKey, $img);
         }
 
         return $img;
