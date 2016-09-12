@@ -204,7 +204,7 @@ class ImageBehave extends Behavior
      */
     public function getImage()
     {
-        $img = \Yii::$app->cache->get('mainImage' . this->owner->primaryKey . $this->getModule()->getShortClass($this->owner));
+        $img = \Yii::$app->cache->get('mainImage' . $this->owner->primaryKey . $this->getModule()->getShortClass($this->owner));
         if ($img === false) {
             if ($this->getModule()->className === null) {
                 $imageQuery = Image::find();
@@ -220,7 +220,7 @@ class ImageBehave extends Behavior
             if(!$img){
                 return $this->getModule()->getPlaceHolder();
             }
-            \Yii::$app->cache->set('mainImage' . this->owner->primaryKey . $this->getModule()->getShortClass($this->owner), $img);
+            \Yii::$app->cache->set('mainImage' . $this->owner->primaryKey . $this->getModule()->getShortClass($this->owner), $img);
         }
 
         return $img;
