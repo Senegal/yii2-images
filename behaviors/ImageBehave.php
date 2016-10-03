@@ -14,6 +14,7 @@ use rico\yii2images\models\Image;
 use yii;
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
 use rico\yii2images\models;
 use yii\helpers\BaseFileHelper;
 use \rico\yii2images\ModuleTrait;
@@ -186,7 +187,7 @@ class ImageBehave extends Behavior
             $imageQuery = $class::find();
         }
         $imageQuery->where($finder);
-        $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
+        $imageQuery->orderBy([new Expression('"isMain" desc nulls last'), 'id' => SORT_ASC]);
 
 
         $imageRecords = $imageQuery->all();
